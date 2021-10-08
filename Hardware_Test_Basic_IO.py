@@ -29,7 +29,7 @@ try:
         start = time.time()
 
         # Basic IO - write motor commands
-        mtr_cmd = np.array([0.1*np.sin(elapsed_time()*2*np.pi/5), 0.5*np.sin(elapsed_time()*2*np.pi/2.5)])
+        mtr_cmd = np.array([0, 0.5*np.sin(elapsed_time()*2*np.pi/2.5)])
         LEDs = np.array([0, 0, 0, 0, 0, 0, 1, 1])
         if mtr_cmd[1] > 0.3:
             LEDs[0] = 1
