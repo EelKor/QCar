@@ -47,7 +47,7 @@ dt = 0.033
 ## QCar 하드웨에 제어 초기화
 ## 조종기 초기화 - gamepadViaTarget(x+1), x = 조종기id , ls -l /dev/input/by-id 에서 exent5 이런식으로 숫자
 myCar = QCar()
-gpad = gamepadViaTarget(6)
+gpad = gamepadViaTarget(5)
 
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 ## Driving Configuration: Use 3 toggles or 4 toggles mode as you see fit:
@@ -88,9 +88,6 @@ try:
         myCam1.read_RGB()
         myCam1.read_depth(dataMode='m') # for data in meters... 
         # myCam1.read_depth(dataMode='px') # for data in pixel range 0-255
-
-        # 조종기 데이터 수신
-        new = gpad.read()
 
         # 루프 카운트 + 1
         counter += 1
@@ -154,6 +151,9 @@ try:
         # ------------------------------------------------------------------------------------
         ## 오토파일럿 및 수동조종
 
+        # 조종기 데이터 수신
+        new = gpad.read()
+
         # 오토파일럿 기능 활성화 확인 X 버튼 으로 On/off
         if gpad.X:
             isAutoPilotOn = not isAutoPilotOn
@@ -172,7 +172,7 @@ try:
         # 수동 조종 모드
         else:
             if new and gpad.LB:
-                mtr_cmd = np.array([0.3*gpad.RLO, 0.5*gpad.LLA]) 
+                mtr_cmd = np.array([0.1*gpad.RLO, 0.5*gpad.LLA]) 
  
         # 하드웨어 제어 명령 전송
         myCar.write_mtrs(mtr_cmd)
@@ -212,12 +212,12 @@ try:
 
         if isAutoPilotOn:
             # 결과 보고
-            print("[AutoPilot]\t\tThrottle:{0:1.2f} Steering: {1:1.2f}"
-                                            .format(mtr_cmd[0], mtr_cmd[1]))
+            print("[AutoPilot]\tThrottle:{0:1.2f}\tSteering: {1:1.2f}\tdt:{2:1.3f}"
+                                            .format(mtr_cmd[0], mtr_cmd[1], computationTime))
         elif not isAutoPilotOn:
             # 결과 보고
-            print("[Manual]\t\tThrottle:{0:1.2f} Steering: {1:1.2f}"
-                                            .format(mtr_cmd[0], mtr_cmd[1]))
+            print("[Manual]\tThrottle:{0:1.2f}\tSteering: {1:1.2f}\tdt:{2:1.3f}"
+                                            .format(mtr_cmd[0], mtr_cmd[1], computationTime))
 
 
 
